@@ -131,27 +131,15 @@ export type Caption = {
 };
 
 // Update CaptionOverlay to include styling for highlighted words
+
 export interface CaptionStyles {
   fontFamily: string
   fontSize: string
   lineHeight: number
   textAlign: "left" | "center" | "right" | "justify"
   color: string
-  fontWeight?: number | string
-  letterSpacing?: string
   textShadow?: string
   padding?: string
-  backgroundColor?: string
-  background?: string
-  backdropFilter?: string
-  borderRadius?: string
-  border?: string
-  transform?: string
-  textTransform?: "none" | "capitalize" | "uppercase" | "lowercase"
-  backgroundClip?: string
-  WebkitBackgroundClip?: string
-  WebkitTextFillColor?: string
-  fontStyle?: "normal" | "italic" | "oblique"
   highlightStyle?: {
     backgroundColor?: string
     color?: string
@@ -165,6 +153,34 @@ export interface CaptionStyles {
     fontStyle?: "normal" | "italic" | "oblique"
     transform?: string
   }
+  animation?: {
+    type: "none" | "fade" | "slide" | "typewriter" | "bounce"
+    duration: number
+    delay: number
+  }
+  textStroke?: {
+    width: string
+    color: string
+  }
+  letterSpacing?: string
+  textTransform?: "none" | "uppercase" | "lowercase" | "capitalize"
+  fontStyle?: "normal" | "italic"
+  textDecoration?: "none" | "underline" | "line-through"
+  backgroundStyle?: {
+    type: "none" | "solid" | "gradient"
+    borderRadius?: string
+    opacity?: number
+  }
+  fontWeight?: number | string
+  backgroundColor?: string
+  background?: string
+  backdropFilter?: string
+  borderRadius?: string
+  border?: string
+  transform?: string
+  backgroundClip?: string
+  WebkitBackgroundClip?: string
+  WebkitTextFillColor?: string
 }
 
 
