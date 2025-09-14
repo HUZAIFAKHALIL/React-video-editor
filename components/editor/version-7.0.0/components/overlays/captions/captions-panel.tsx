@@ -142,6 +142,13 @@ export const CaptionsPanel: React.FC = () => {
       rotation: 0,
       isDragging: false,
       row: position.row,
+     styles: {
+        fontSize: "3rem",
+        opacity: 1,
+        zIndex: 1,
+        transform: "none",
+        textAlign: "center",
+      },// Add default or initial styles as required by your app
     };
 
     addOverlay(newCaptionOverlay);
@@ -216,6 +223,13 @@ export const CaptionsPanel: React.FC = () => {
           rotation: 0,
           isDragging: false,
           row: position.row,
+         styles: {
+        fontSize: "3rem",
+        opacity: 1,
+        zIndex: 1,
+        transform: "none",
+        textAlign: "center",
+      },// Add default or initial styles as required by your app/ Add default or initial styles as required by your app
         };
 
         addOverlay(newCaptionOverlay);

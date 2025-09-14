@@ -179,7 +179,7 @@ export const CaptionTimeline: React.FC<CaptionTimelineProps> = ({
                 placeholder="Enter caption text..."
                 style={{
                   height: "auto",
-                  overflow: "hidden",
+                  overflow: "hidden"
                 }}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;

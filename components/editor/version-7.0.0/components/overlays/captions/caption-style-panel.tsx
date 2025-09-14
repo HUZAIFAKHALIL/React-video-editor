@@ -1,230 +1,109 @@
-// import React from "react";
-// import { CaptionOverlay } from "../../../types";
-// import { captionTemplates } from "../../../templates/caption-templates";
+import React, { useState } from "react";
+import { CaptionOverlay } from "../../../types";
+import { captionTemplates } from "../../../templates/caption-templates";
+import {
+  Type,
+  Palette,
+  Sparkles,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Layers,
+} from "lucide-react";
 
-// /**
-//  * Props for the CaptionStylePanel component
-//  * @interface CaptionStylePanelProps
-//  * @property {CaptionOverlay} localOverlay - Current caption overlay being styled
-//  * @property {Function} setLocalOverlay - Function to update the caption overlay
-//  */
-// interface CaptionStylePanelProps {
-//   localOverlay: CaptionOverlay;
-//   setLocalOverlay: (overlay: CaptionOverlay) => void;
-// }
-
-// /**
-//  * CaptionStylePanel Component
-//  *
-//  * @component
-//  * @description
-//  * Provides a visual interface for selecting and customizing caption styles.
-//  * Features include:
-//  * - Pre-defined style templates
-//  * - Live preview of styles
-//  * - Color palette visualization
-//  * - Active state indication
-//  *
-//  * Each template includes:
-//  * - Preview text with highlight example
-//  * - Template name and status
-//  * - Color scheme visualization
-//  *
-//  * @example
-//  * ```tsx
-//  * <CaptionStylePanel
-//  *   localOverlay={captionOverlay}
-//  *   setLocalOverlay={handleStyleUpdate}
-//  * />
-//  * ```
-//  */
-// export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({
-//   localOverlay,
-//   setLocalOverlay,
-// }) => {
-//   return (
-//     <div className="space-y-4">
-//       {/* Templates Grid */}
-//       <div className="grid grid-cols-1 gap-3">
-//         {Object.entries(captionTemplates).map(([key, template]) => (
-//           <button
-//             key={key}
-//             onClick={() => {
-//               const updatedOverlay = {
-//                 ...localOverlay,
-//                 template: key,
-//                 styles: template.styles,
-//               };
-//               setLocalOverlay(updatedOverlay);
-//             }}
-//             className={`group relative overflow-hidden rounded-lg border transition-all duration-200
-//               ${
-//                 localOverlay?.template === key
-//                   ? "border-blue-500 bg-blue-500/10 ring-2 ring-blue-500/30 dark:ring-blue-400/30"
-//                   : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50/50 dark:bg-gray-800/30 hover:bg-gray-100/80 dark:hover:bg-gray-800/50"
-//               }`}
-//           >
-//             {/* Preview Area with demo text */}
-//             <div className="relative aspect-[16/7] w-full overflow-hidden bg-gray-900/90 dark:from-black/40 dark:to-gray-900/40">
-//               <div className="absolute inset-0 flex items-center justify-center p-10">
-//                 <span
-//                   style={{
-//                     ...template.styles,
-//                     fontSize: "1.2rem",
-//                     lineHeight: "1.2",
-//                   }}
-//                 >
-//                   Let&apos;s{" "}
-//                   <span
-//                     style={{
-//                       ...template.styles.highlightStyle,
-//                       transform: `scale(${
-//                         template.styles.highlightStyle?.scale || 1
-//                       })`,
-//                     }}
-//                   >
-//                     start
-//                   </span>{" "}
-//                   with a demo of your caption.
-//                 </span>
-//               </div>
-//             </div>
-
-//             {/* Template Info and Color Palette */}
-//             <div className="flex items-center justify-between p-3 bg-white/50 dark:bg-gray-900/40 backdrop-blur-sm">
-//               {/* Template Name and Status */}
-//               <div className="flex items-center gap-2">
-//                 <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
-//                   {template.name}
-//                 </span>
-//                 {localOverlay?.template === key && (
-//                   <span className="text-[10px] text-blue-600 dark:text-blue-400 font-medium bg-blue-100 dark:bg-blue-500/20 px-2 py-0.5 rounded-full">
-//                     Active
-//                   </span>
-//                 )}
-//               </div>
-
-//               {/* Color Palette Preview */}
-//               <div className="flex items-center gap-1.5">
-//                 {[
-//                   template.styles.color,
-//                   template.styles.highlightStyle?.backgroundColor,
-//                 ].map((color, i) => (
-//                   <div
-//                     key={i}
-//                     className="w-3 h-3 rounded-full ring-1 ring-black/5 dark:ring-white/10"
-//                     style={{ backgroundColor: color }}
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//           </button>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-
-import { Type, Palette, Move, Sparkles, AlignLeft, AlignCenter, AlignRight, Layers, Badge } from "lucide-react"
-import { CaptionOverlay, CaptionStyles } from "../../../types"
-import { Slider } from "@radix-ui/react-slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import ColorPicker from "react-best-gradient-color-picker"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { captionTemplates } from "../../../templates/caption-templates"
-import { Input } from "@/components/ui/input"
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import ColorPicker from "react-best-gradient-color-picker";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
 
 interface CaptionStylePanelProps {
-  localOverlay: CaptionOverlay
-  setLocalOverlay: (overlay: CaptionOverlay) => void
+  localOverlay: CaptionOverlay;
+  setLocalOverlay: (overlay: CaptionOverlay) => void;
 }
 
-const fonts = [
-  { value: "Inter, sans-serif", label: "Inter (Sans-serif)" },
-  { value: "Montserrat, sans-serif", label: "Montserrat" },
-  { value: "Space Grotesk, sans-serif", label: "Space Grotesk" },
-  { value: "Playfair Display, serif", label: "Playfair Display (Serif)" },
-  { value: "Caveat, cursive", label: "Caveat (Handwriting)" },
-  { value: "Courier Prime, monospace", label: "Courier Prime (Mono)" },
-  { value: "Orbitron, sans-serif", label: "Orbitron (Futuristic)" },
-  { value: "Comic Neue, cursive", label: "Comic Neue" },
-]
+export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({
+  localOverlay,
+  setLocalOverlay,
+}) => {
+  const [activeTab, setActiveTab] = useState("templates");
 
-export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverlay, setLocalOverlay }) => {
-  const [activeTab, setActiveTab] = useState("templates")
-
-  const defaultStyles: CaptionStyles = {
-    fontFamily: "Inter, sans-serif",
-    fontSize: "2rem",
-    lineHeight: 1.2,
-    textAlign: "center",
-    color: "#ffffff",
-    textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
-    padding: "24px",
-    highlightStyle: {
-      backgroundColor: "#3b82f6",
-      scale: 1,
-      fontWeight: 700,
-      textShadow: "none",
-    },
-    animation: {
-      type: "none",
-      duration: 500,
-      delay: 0,
-    },
-  }
-
-  const currentStyles = localOverlay.styles ? { ...defaultStyles, ...localOverlay.styles } : defaultStyles
-
-  const updateStyles = (updates: Partial<CaptionStyles>) => {
+  // Safe style updater
+  const handleStyleChange = (
+    field: keyof NonNullable<CaptionOverlay["styles"]>,
+    value: any
+  ) => {
     setLocalOverlay({
       ...localOverlay,
       styles: {
-        ...currentStyles,
-        ...updates,
+        ...(localOverlay.styles || {}),
+        [field]: value,
       },
-    })
-  }
+    });
+  };
 
-  const updateHighlightStyle = (updates: Partial<NonNullable<CaptionStyles["highlightStyle"]>>) => {
+const handleTextAlignChange = (value: "left" | "center" | "right") => {
+  if (!value) return;
+  console.log("Updating textAlign to:", value);
+  console.log("Current styles before update:", localOverlay.styles.textAlign);
+  setLocalOverlay({
+    ...localOverlay,
+    styles: {
+      ...(localOverlay.styles ?? {}),
+      textAlign: value,
+    },
+  });
+};
+
+
+
+  const handleHighlightChange = (
+    field: keyof NonNullable<
+      NonNullable<CaptionOverlay["styles"]>["highlightStyle"]
+    >,
+    value: any
+  ) => {
     setLocalOverlay({
       ...localOverlay,
       styles: {
-        ...currentStyles,
+        ...(localOverlay.styles || {}),
         highlightStyle: {
-          ...currentStyles.highlightStyle,
-          ...updates,
+          ...(localOverlay.styles?.highlightStyle || {}),
+          [field]: value,
         },
       },
-    })
-  }
-
-  const updateAnimation = (updates: Partial<NonNullable<CaptionStyles["animation"]>>) => {
-    setLocalOverlay({
-      ...localOverlay,
-      styles: {
-        ...currentStyles,
-        // animation: {
-        //   ...currentStyles.animation,
-        //   ...updates,
-        // },
-      },
-    })
-  }
+    });
+  };
 
   return (
     <div className="space-y-4">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full bg-dark">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="templates" className="flex items-center gap-2">
             <Layers className="w-3 h-3" />
@@ -240,19 +119,18 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
           </TabsTrigger>
         </TabsList>
 
-        {/* Templates Tab - Original template selection functionality */}
+        {/* Templates Tab */}
         <TabsContent value="templates" className="space-y-4">
           <div className="grid grid-cols-1 gap-3 overflow-y-auto">
             {Object.entries(captionTemplates).map(([key, template]) => (
               <button
                 key={key}
                 onClick={() => {
-                  const updatedOverlay = {
+                  setLocalOverlay({
                     ...localOverlay,
                     template: key,
                     styles: template.styles,
-                  }
-                  setLocalOverlay(updatedOverlay)
+                  });
                 }}
                 className={`group relative overflow-hidden rounded-lg border transition-all duration-200
                   ${
@@ -261,21 +139,23 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                       : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50/50 dark:bg-gray-800/30 hover:bg-gray-100/80 dark:hover:bg-gray-800/50"
                   }`}
               >
-                {/* Preview Area with demo text */}
-                <div className="relative aspect-[16/7] w-full overflow-hidden bg-gray-900/90 dark:from-black/40 dark:to-gray-900/40">
+                {/* Preview */}
+                <div className="relative aspect-[16/7] w-full overflow-hidden bg-gray-900/90">
                   <div className="absolute inset-0 flex items-center justify-center p-10">
                     <span
-                      // style={{
-                        // ...template.styles,
-                        // fontSize: "1.2rem",
-                        // lineHeight: "1.2",
-                      // }}
+                      style={{
+                        ...template.styles,
+                        fontSize: "1.2rem",
+                        lineHeight: "1.2",
+                      }}
                     >
                       Let&apos;s{" "}
                       <span
                         style={{
                           ...template.styles.highlightStyle,
-                          transform: `scale(${template.styles.highlightStyle?.scale || 1})`,
+                          transform: `scale(${
+                            template.styles.highlightStyle?.scale || 1
+                          })`,
                         }}
                       >
                         start
@@ -285,10 +165,12 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                   </div>
                 </div>
 
-                {/* Template Info and Color Palette */}
+                {/* Info Row */}
                 <div className="flex items-center justify-between p-3 bg-white/50 dark:bg-gray-900/40 backdrop-blur-sm">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200">{template.name}</span>
+                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
+                      {template.name}
+                    </span>
                     {localOverlay?.template === key && (
                       <span className="text-[10px] text-blue-600 dark:text-blue-400 font-medium bg-blue-100 dark:bg-blue-500/20 px-2 py-0.5 rounded-full">
                         Active
@@ -297,7 +179,10 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    {[template.styles.color, template.styles.highlightStyle?.backgroundColor].map((color, i) => (
+                    {[
+                      template.styles.color,
+                      template.styles.highlightStyle?.backgroundColor,
+                    ].map((color, i) => (
                       <div
                         key={i}
                         className="w-3 h-3 rounded-full ring-1 ring-black/5 dark:ring-white/10"
@@ -311,7 +196,11 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
           </div>
         </TabsContent>
 
-        <TabsContent value="typography" className="space-y-6 max-h-[500px] overflow-y-auto">
+        {/* Typography Tab */}
+        <TabsContent
+          value="typography"
+          className="space-y-6 max-h-full overflow-y-auto"
+        >
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-2">
@@ -323,13 +212,31 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
               {/* Font Family */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium">Font Family</Label>
-                <Select value={currentStyles.fontFamily} onValueChange={(value) => updateStyles({ fontFamily: value })}>
+                <Select
+                  value={localOverlay.styles?.fontFamily || "Inter, sans-serif"}
+                  onValueChange={(value) =>
+                    handleStyleChange("fontFamily", value)
+                  }
+                >
                   <SelectTrigger className="h-8">
                     <SelectValue placeholder="Select a font" />
                   </SelectTrigger>
                   <SelectContent>
-                    {fonts.map((font) => (
-                      <SelectItem key={font.value} value={font.value} className={`${font.value} text-xs`}>
+                    {[
+                      { value: "Inter, sans-serif", label: "Inter (Sans-serif)" },
+                      { value: "Montserrat, sans-serif", label: "Montserrat" },
+                      { value: "Space Grotesk, sans-serif", label: "Space Grotesk" },
+                      { value: "Playfair Display, serif", label: "Playfair Display" },
+                      { value: "Caveat, cursive", label: "Caveat" },
+                      { value: "Courier Prime, monospace", label: "Courier Prime" },
+                      { value: "Orbitron, sans-serif", label: "Orbitron" },
+                      { value: "Comic Neue, cursive", label: "Comic Neue" },
+                    ].map((font) => (
+                      <SelectItem
+                        key={font.value}
+                        value={font.value}
+                        className={`${font.value} text-xs`}
+                      >
                         {font.label}
                       </SelectItem>
                     ))}
@@ -337,28 +244,39 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                 </Select>
               </div>
 
-             
+              {/* Font Size + Weight */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-xs font-medium">Font Size</Label>
                   <div className="flex items-center gap-2">
                     <Slider
-                      value={[Number.parseFloat(currentStyles.fontSize)]}
-                      onValueChange={([value]) => updateStyles({ fontSize: `${value}rem` })}
+                      value={[
+                        Number.parseFloat(
+                          localOverlay.styles?.fontSize?.replace("rem", "") ||
+                            "2"
+                        ),
+                      ]}
+                      onValueChange={([value]) =>
+                        handleStyleChange("fontSize", `${value}rem`)
+                      }
                       min={0.5}
                       max={6}
                       step={0.1}
                       className="flex-1"
                     />
-                    <span className="text-xs text-muted-foreground w-12">{currentStyles.fontSize}</span>
+                    <span className="text-xs text-muted-foreground w-12">
+                      {localOverlay.styles?.fontSize || "2rem"}
+                    </span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-xs font-medium">Font Weight</Label>
                   <Select
-                    value={String(currentStyles.highlightStyle?.fontWeight || 500)}
-                    onValueChange={(value) => updateHighlightStyle({ fontWeight: Number.parseInt(value) })}
+                    value={String(localOverlay.styles?.fontWeight || 500)}
+                    onValueChange={(value) =>
+                      handleStyleChange("fontWeight", Number(value))
+                    }
                   >
                     <SelectTrigger className="h-8">
                       <SelectValue />
@@ -375,26 +293,45 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                 </div>
               </div>
 
+              {/* Highlight Weight */}
+              <div className="space-y-2">
+                <Label className="text-xs font-medium">Highlight Weight</Label>
+                <Select
+                  value={String(localOverlay.styles?.highlightStyle?.fontWeight || 600)}
+                  onValueChange={(value) =>
+                    handleHighlightChange("fontWeight", Number(value))
+                  }
+                >
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="400">Normal</SelectItem>
+                    <SelectItem value="500">Medium</SelectItem>
+                    <SelectItem value="600">Semi Bold</SelectItem>
+                    <SelectItem value="700">Bold</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Text Alignment */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium">Text Alignment</Label>
                 <ToggleGroup
                   type="single"
                   className="justify-start gap-1"
-                  value={currentStyles.textAlign}
+                  value={localOverlay.styles?.textAlign }
                   onValueChange={(value) => {
-                    if (value && ["left", "center", "right", "justify"].includes(value)) {
-                      updateStyles({ textAlign: value as CaptionStyles["textAlign"] })
-                    }
+                    if (value) handleTextAlignChange(value as "left" | "center" | "right");
                   }}
                 >
-                  <ToggleGroupItem value="left" aria-label="Align left" className="h-10 w-10">
+                  <ToggleGroupItem value="left" className="h-10 w-10">
                     <AlignLeft className="h-4 w-4" />
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="center" aria-label="Align center" className="h-10 w-10">
+                  <ToggleGroupItem value="center" className="h-10 w-10">
                     <AlignCenter className="h-4 w-4" />
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="right" aria-label="Align right" className="h-10 w-10">
+                  <ToggleGroupItem value="right" className="h-10 w-10">
                     <AlignRight className="h-4 w-4" />
                   </ToggleGroupItem>
                 </ToggleGroup>
@@ -405,20 +342,29 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                 <Label className="text-xs font-medium">Letter Spacing</Label>
                 <div className="flex items-center gap-2">
                   <Slider
-                    value={[Number.parseFloat(currentStyles.letterSpacing || "0")]}
-                    onValueChange={([value]) => updateStyles({ letterSpacing: `${value}px` })}
-                    min={-2}
-                    max={10}
-                    step={0.5}
+                    value={[
+                      Number.parseFloat(
+                        localOverlay.styles?.letterSpacing?.replace(/[a-z]/g, "") ||
+                          "0"
+                      ),
+                    ]}
+                    onValueChange={([value]) =>
+                      handleStyleChange("letterSpacing", `${value}em`)
+                    }
+                    min={-0.1}
+                    max={1}
+                    step={0.01}
                     className="flex-1"
                   />
-                  <span className="text-xs text-muted-foreground w-12">{currentStyles.letterSpacing || "0px"}</span>
+                  <span className="text-xs text-muted-foreground w-12">
+                    {localOverlay.styles?.letterSpacing || "0em"}
+                  </span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Colors Section */}
+          {/* Color Settings */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-2">
@@ -434,25 +380,22 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                   <PopoverTrigger asChild>
                     <div
                       className="h-8 w-8 rounded-md border cursor-pointer"
-                      style={{ backgroundColor: currentStyles.color }}
+                      style={{ backgroundColor: localOverlay.styles?.color }}
                     />
                   </PopoverTrigger>
                   <PopoverContent className="w-[330px] dark:bg-gray-900 border border-gray-700" side="right">
                     <ColorPicker
-                      value={currentStyles.color}
-                      onChange={(color) => updateStyles({ color })}
-                      hideHue
+                      value={localOverlay.styles?.color || "#000000"}
+                      onChange={(color) => handleStyleChange("color", color)}
                       hideControls
-                      hideColorTypeBtns
-                      hideAdvancedSliders
+                      hideHue
                       hideColorGuide
-                      hideInputType
-                      height={200}
                     />
                   </PopoverContent>
                 </Popover>
               </div>
 
+              {/* Highlight Background */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium">Highlight Background</Label>
                 <Popover>
@@ -460,24 +403,19 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
                     <div
                       className="h-8 w-8 rounded-md border cursor-pointer"
                       style={{
-                        backgroundColor: currentStyles.highlightStyle?.backgroundColor,
+                        backgroundColor: localOverlay.styles?.highlightStyle?.backgroundColor,
                       }}
                     />
                   </PopoverTrigger>
                   <PopoverContent className="w-[330px] dark:bg-gray-900 border border-gray-700" side="right">
                     <ColorPicker
-                      value={currentStyles.highlightStyle?.backgroundColor}
-                      onChange={(color) => {
-                        updateHighlightStyle({ backgroundColor: color })
-                      }}
-                      hideInputs
-                      hideHue
+                      value={localOverlay.styles?.highlightStyle?.backgroundColor || "#ff0"}
+                      onChange={(color) =>
+                        handleHighlightChange("backgroundColor", color)
+                      }
                       hideControls
-                      hideColorTypeBtns
-                      hideAdvancedSliders
+                      hideHue
                       hideColorGuide
-                      hideInputType
-                      height={200}
                     />
                   </PopoverContent>
                 </Popover>
@@ -486,127 +424,11 @@ export const CaptionStylePanel: React.FC<CaptionStylePanelProps> = ({ localOverl
           </Card>
         </TabsContent>
 
-        <TabsContent value="effects" className="space-y-6 max-h-[500px] overflow-y-auto">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Move className="w-4 h-4" />
-                Text Effects
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Text Shadow */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium">Text Shadow</Label>
-                <Input
-                  value={currentStyles.textShadow || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateStyles({ textShadow: e.target.value })}
-                  className="h-8 text-xs"
-                  placeholder="2px 2px 4px rgba(0,0,0,0.5)"
-                />
-              </div>
-
-              {/* Background Color */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium">Background Color</Label>
-                <Input
-                  value={currentStyles.backgroundColor || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateStyles({ backgroundColor: e.target.value })
-                  }
-                  className="h-8 text-xs"
-                  placeholder="rgba(0,0,0,0.8)"
-                />
-              </div>
-
-              {/* Padding */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium">Padding</Label>
-                <Input
-                  value={currentStyles.padding || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateStyles({ padding: e.target.value })}
-                  className="h-8 text-xs"
-                  placeholder="24px"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Animation Section */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Sparkles className="w-4 h-4" />
-                Animation
-                <Badge fontVariant="secondary" className="text-xs">
-                  New
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Animation Type */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium">Animation Type</Label>
-                <Select
-                  value={currentStyles.animation?.type || "none"}
-                  onValueChange={(value) => updateAnimation({ type: value as any })}
-                >
-                  <SelectTrigger className="h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
-                    <SelectItem value="fade">Fade In</SelectItem>
-                    <SelectItem value="slide">Slide Up</SelectItem>
-                    <SelectItem value="typewriter">Typewriter</SelectItem>
-                    <SelectItem value="bounce">Bounce</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {currentStyles.animation?.type !== "none" && (
-                <>
-                  {/* Animation Duration */}
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium">Duration (ms)</Label>
-                    <div className="flex items-center gap-2">
-                      <Slider
-                        value={[currentStyles.animation?.duration || 500]}
-                        onValueChange={([value]) => updateAnimation({ duration: value })}
-                        min={100}
-                        max={2000}
-                        step={100}
-                        className="flex-1"
-                      />
-                      <span className="text-xs text-muted-foreground w-12">
-                        {currentStyles.animation?.duration || 500}ms
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Animation Delay */}
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium">Delay (ms)</Label>
-                    <div className="flex items-center gap-2">
-                      <Slider
-                        value={[currentStyles.animation?.delay || 0]}
-                        onValueChange={([value]) => updateAnimation({ delay: value })}
-                        min={0}
-                        max={1000}
-                        step={50}
-                        className="flex-1"
-                      />
-                      <span className="text-xs text-muted-foreground w-12">
-                        {currentStyles.animation?.delay || 0}ms
-                      </span>
-                    </div>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+        {/* Effects Tab */}
+        <TabsContent value="effects" className="p-3">
+          <p className="text-sm text-gray-500">Effects controls go here.</p>
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
+  );
+};
