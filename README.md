@@ -128,4 +128,3 @@ Ensure compliance with both licenses before deploying to production.
 - [Remotion](https://www.remotion.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Radix UI](https://www.radix-ui.com/)
-# React-video-editor
