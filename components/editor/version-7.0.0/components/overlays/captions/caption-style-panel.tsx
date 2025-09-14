@@ -9,6 +9,8 @@ import {
   AlignCenter,
   AlignRight,
   Layers,
+  Move,
+  Badge,
 } from "lucide-react";
 
 import { Slider } from "@/components/ui/slider";
@@ -42,6 +44,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
+import { Input } from "@/components/ui/input";
 
 interface CaptionStylePanelProps {
   localOverlay: CaptionOverlay;
@@ -144,7 +147,9 @@ const handleTextAlignChange = (value: "left" | "center" | "right") => {
                   <div className="absolute inset-0 flex items-center justify-center p-10">
                     <span
                       style={{
-                        ...template.styles,
+                        ...Object.fromEntries(
+                          Object.entries(template.styles).filter(([key]) => key !== "animation")
+                        ),
                         fontSize: "1.2rem",
                         lineHeight: "1.2",
                       }}
@@ -424,10 +429,131 @@ const handleTextAlignChange = (value: "left" | "center" | "right") => {
           </Card>
         </TabsContent>
 
-        {/* Effects Tab */}
-        <TabsContent value="effects" className="p-3">
-          <p className="text-sm text-gray-500">Effects controls go here.</p>
-        </TabsContent>
+      <TabsContent value="effects" className="space-y-6 max-h-full overflow-y-auto">
+        <Card>
+          <CardHeader className="pb-3">
+        <CardTitle className="text-sm flex items-center gap-2">
+          <Move className="w-4 h-4" />
+          Text Effects
+        </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label className="text-xs font-medium">Text Shadow</Label>
+          <Input
+            value={localOverlay.styles?.textShadow || ""}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleStyleChange("textShadow", e.target.value)}
+            className="h-8 text-xs"
+            placeholder="2px 2px 4px rgba(0,0,0,0.5)"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-xs font-medium">Background Color</Label>
+          <Input
+            value={localOverlay.styles?.backgroundColor || ""}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleStyleChange("backgroundColor", e.target.value)
+            }
+            className="h-8 text-xs"
+            placeholder="rgba(0,0,0,0.8)"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-xs font-medium">Padding</Label>
+          <Input
+            value={localOverlay.styles?.padding || ""}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleStyleChange("padding", e.target.value)}
+            className="h-8 text-xs"
+            placeholder="24px"
+          />
+        </div>
+          </CardContent>
+        </Card>
+
+        {/* <Card>
+          <CardHeader className="pb-3">
+        <CardTitle className="text-sm flex items-center gap-2">
+          <Sparkles className="w-4 h-4" />
+          Animation
+          <Badge fontVariant="secondary" className="text-xs">
+            New
+          </Badge>
+        </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label className="text-xs font-medium">Animation Type</Label>
+          <Select
+            value={localOverlay.styles?.animation?.type || "none"}
+            onValueChange={(value) =>
+          handleStyleChange("animation", {
+            ...localOverlay.styles?.animation,
+            type: value as any,
+          })
+            }
+          >
+            <SelectTrigger className="h-8">
+          <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+          <SelectItem value="none">None</SelectItem>
+          <SelectItem value="fade">Fade In</SelectItem>
+          <SelectItem value="slide">Slide Up</SelectItem>
+          <SelectItem value="typewriter">Typewriter</SelectItem>
+          <SelectItem value="bounce">Bounce</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {localOverlay.styles?.animation?.type !== "none" && (
+          <>
+            <div className="space-y-2">
+          <Label className="text-xs font-medium">Duration (ms)</Label>
+          <div className="flex items-center gap-2">
+            <Slider
+              value={[localOverlay.styles?.animation?.duration || 500]}
+              onValueChange={([value]) =>
+            handleStyleChange("animation", {
+              ...localOverlay.styles?.animation,
+              duration: value,
+            })
+              }
+              min={100}
+              max={2000}
+              step={100}
+              className="flex-1"
+            />
+            <span className="text-xs text-muted-foreground w-12">{localOverlay.styles?.animation?.duration || 500}ms</span>
+          </div>
+            </div>
+
+            <div className="space-y-2">
+          <Label className="text-xs font-medium">Delay (ms)</Label>
+          <div className="flex items-center gap-2">
+            <Slider
+              value={[localOverlay.styles?.animation?.delay || 0]}
+              onValueChange={([value]) =>
+            handleStyleChange("animation", {
+              ...localOverlay.styles?.animation,
+              delay: value,
+            })
+              }
+              min={0}
+              max={1000}
+              step={50}
+              className="flex-1"
+            />
+            <span className="text-xs text-muted-foreground w-12">{localOverlay.styles?.animation?.delay || 0}ms</span>
+          </div>
+            </div>
+          </>
+        )}
+          </CardContent>
+        </Card> */}|
+        
+      </TabsContent> 
       </Tabs>
     </div>
   );

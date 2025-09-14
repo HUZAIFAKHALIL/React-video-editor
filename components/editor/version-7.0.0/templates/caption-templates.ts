@@ -1,8 +1,8 @@
-import { CaptionStyles } from "../types";
+import { CaptionOverlay } from "../types";
 
 export const captionTemplates: Record<
   string,
-  { name: string; styles: CaptionStyles; preview: string; isPro?: boolean }
+  { name: string; styles: CaptionOverlay["styles"]; preview: string; isPro?: boolean }
 > = {
   classic: {
     name: "Classic",

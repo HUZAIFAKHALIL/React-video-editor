@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from "react";
-import { Overlay, AspectRatio, CaptionStyles } from "../types";
+import { Overlay, AspectRatio, CaptionOverlay } from "../types";
 
 // Define the shape of the context
 interface EditorContextProps {
@@ -58,7 +58,7 @@ interface EditorContextProps {
   // New style management prop
   updateOverlayStyles: (
     overlayId: number,
-    styles: Partial<CaptionStyles>
+    styles: Partial<CaptionOverlay["styles"]>
   ) => void;
 
   // New resetOverlays prop

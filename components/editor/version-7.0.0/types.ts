@@ -129,6 +129,7 @@ export type Caption = {
   words: CaptionWord[];
 };
 
+
 export interface CaptionOverlay extends BaseOverlay {
   type: OverlayType.CAPTION;
   captions: Caption[];
@@ -136,7 +137,7 @@ export interface CaptionOverlay extends BaseOverlay {
     fontFamily?: string;
     fontSize?: string;
     lineHeight?: string | number;
- textAlign?: "left" | "center" | "right"; 
+    textAlign?: "left" | "center" | "right";
     color?: string;
     backgroundColor?: string;
     background?: string;
@@ -147,7 +148,7 @@ export interface CaptionOverlay extends BaseOverlay {
     textShadow?: string;
     borderRadius?: string;
     transition?: string;
-
+    animation?: AnimationConfig;
     // highlight style for selected text
     highlightStyle?: Partial<{
       backgroundColor: string;
@@ -163,7 +164,7 @@ export interface CaptionOverlay extends BaseOverlay {
       backdropFilter: string;
     }>;
 
-    
+
   };
   template?: string;
 }
