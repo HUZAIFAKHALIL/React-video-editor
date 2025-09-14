@@ -355,7 +355,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
               alt=""
               draggable="false"
               onDragStart={(e) => e.preventDefault()}
-              className="h-7 w-7 rounded-[1px] ml-6 w-auto object-cover"
+              className="h-7  rounded-[1px] ml-6 w-auto object-cover"
             />
           </div>
         ) : (

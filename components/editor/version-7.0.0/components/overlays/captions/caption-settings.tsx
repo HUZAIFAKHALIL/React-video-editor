@@ -1,5 +1,5 @@
 import React from "react";
-import { CaptionOverlay, CaptionStyles, Caption } from "../../../types";
+import { CaptionOverlay, Caption } from "../../../types";
 
 import { AlignLeft, PaintBucket, Mic } from "lucide-react";
 
@@ -33,7 +33,7 @@ interface CaptionSettingsProps {
  * Default styling configuration for captions
  * Defines the base appearance for all captions including font, size, colors, and highlight effects
  */
-export const defaultCaptionStyles: CaptionStyles = {
+export const defaultCaptionStyles: CaptionOverlay["styles"] = {
   fontFamily: "Inter, sans-serif",
   fontSize: "2.5rem",
   lineHeight: 1.4,

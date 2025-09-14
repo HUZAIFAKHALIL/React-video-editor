@@ -2,64 +2,46 @@ import React from "react";
 import { useCurrentFrame } from "remotion";
 import { Caption, CaptionOverlay } from "../../../types";
 import { defaultCaptionStyles } from "./caption-settings";
+import { animationTemplates } from "../../../templates/animation-templates";
 
-/**
- * Props for the CaptionLayerContent component
- * @interface CaptionLayerContentProps
- * @property {CaptionOverlay} overlay - The caption overlay object containing timing and style information
- */
 interface CaptionLayerContentProps {
   overlay: CaptionOverlay;
 }
 
-/**
- * CaptionLayerContent Component
- *
- * @component
- * @description
- * Renders animated captions in the video editor with word-by-word highlighting.
- * Features include:
- * - Word-by-word timing and animation
- * - Customizable text styles and animations
- * - Smooth transitions between words
- * - Dynamic highlighting based on current frame
- *
- * The component calculates timing for each word and applies appropriate
- * styling and animations based on the current playback position.
- *
- * @example
- * ```tsx
- * <CaptionLayerContent
- *   overlay={{
- *     captions: [...],
- *     styles: {...},
- *     // other overlay properties
- *   }}
- * />
- * ```
- */
 export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
   overlay,
 }) => {
   const frame = useCurrentFrame();
-  const frameMs = (frame / 30) * 1000;
+  const frameMs = (frame / 30) * 1000; // Convert frame to milliseconds
   const styles = overlay.styles || defaultCaptionStyles;
 
-  /**
-   * Finds the current caption based on the frame timestamp
-   */
   const currentCaption = overlay.captions.find(
     (caption) => frameMs >= caption.startMs && frameMs <= caption.endMs
   );
 
   if (!currentCaption) return null;
 
-  /**
-   * Renders individual words with highlight animations
-   * @param caption - The current caption object containing words and timing
-   */
+  const alignmentMap: Record<string, string> = {
+    left: "flex-start",
+    center: "center",
+    right: "flex-end",
+  };
+
+
+  const isExitPhase = frame >= overlay.durationInFrames - 30;
+
+
+  const enterAnimation =
+    !isExitPhase && styles.animation?.enter
+      ? animationTemplates[styles.animation.enter]?.enter(frame, overlay.durationInFrames)
+      : {};
+  const exitAnimation =
+    isExitPhase && styles.animation?.exit
+      ? animationTemplates[styles.animation.exit]?.exit(frame, overlay.durationInFrames)
+      : {};
+
   const renderWords = (caption: Caption) => {
-    return caption?.words?.map((word, index) => {
+    return caption.words.map((word, index) => {
       const isHighlighted = frameMs >= word.startMs && frameMs <= word.endMs;
       const progress = isHighlighted
         ? Math.min((frameMs - word.startMs) / 300, 1)
@@ -73,10 +55,24 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
           key={`${word.word}-${index}`}
           className="inline-block transition-all duration-200"
           style={{
-            color: isHighlighted ? highlightStyle?.color : styles.color,
+            fontFamily: styles.fontFamily,
+            fontSize: styles.fontSize,
+            fontWeight: isHighlighted
+              ? highlightStyle?.fontWeight || 600
+              : styles.fontWeight || 400,
+            color: isHighlighted
+              ? highlightStyle?.color || styles.color
+              : styles.color,
             backgroundColor: isHighlighted
               ? highlightStyle?.backgroundColor
               : "transparent",
+            letterSpacing: styles.letterSpacing || "0em",
+            wordSpacing: styles.wordSpacing || "0em",
+            textShadow: isHighlighted
+              ? highlightStyle?.textShadow
+              : styles.textShadow,
+            padding: highlightStyle?.padding || "4px 8px",
+            borderRadius: highlightStyle?.borderRadius || "4px",
             opacity: isHighlighted ? 1 : 0.85,
             transform: isHighlighted
               ? `scale(${
@@ -86,15 +82,8 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
                     : 0.08)
                 })`
               : "scale(1)",
-            fontWeight: isHighlighted
-              ? highlightStyle?.fontWeight || 600
-              : styles.fontWeight || 400,
-            textShadow: isHighlighted
-              ? highlightStyle?.textShadow
-              : styles.textShadow,
-            padding: highlightStyle?.padding || "4px 8px",
-            borderRadius: highlightStyle?.borderRadius || "4px",
             margin: "0 2px",
+            ...(isExitPhase ? exitAnimation : enterAnimation), 
           }}
         >
           {word.word}
@@ -105,11 +94,18 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
 
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center p-4"
+      className="absolute inset-0 flex items-center p-4"
       style={{
-        ...styles,
         width: "100%",
         height: "100%",
+        fontFamily: styles.fontFamily,
+        fontSize: styles.fontSize,
+        fontWeight: styles.fontWeight,
+        color: styles.color,
+        letterSpacing: styles.letterSpacing || "0em",
+        wordSpacing: styles.wordSpacing || "0em",
+        textShadow: styles.textShadow,
+        ...(isExitPhase ? exitAnimation : enterAnimation), // Apply animations to container
       }}
     >
       <div
@@ -117,11 +113,9 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
         style={{
           whiteSpace: "pre-wrap",
           width: "100%",
-          textAlign: "center",
-          wordBreak: "break-word",
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "center",
+          justifyContent: alignmentMap[styles.textAlign || "center"],
           alignItems: "center",
           gap: "2px",
         }}

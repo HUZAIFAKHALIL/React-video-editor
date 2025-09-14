@@ -1,7 +1,6 @@
 // Define overlay types enum
 export enum OverlayType {
   TEXT = "text",
-  SUBTITILES = "subtitles",
   IMAGE = "image",
   SHAPE = "shape",
   VIDEO = "video",
@@ -130,64 +129,44 @@ export type Caption = {
   words: CaptionWord[];
 };
 
-// Update CaptionOverlay to include styling for highlighted words
-
-export interface CaptionStyles {
-  fontFamily: string
-  fontSize: string
-  lineHeight: number
-  textAlign: "left" | "center" | "right" | "justify"
-  color: string
-  textShadow?: string
-  padding?: string
-  highlightStyle?: {
-    backgroundColor?: string
-    color?: string
-    scale?: number
-    fontWeight?: number | string
-    textShadow?: string
-    borderRadius?: string
-    padding?: string
-    border?: string
-    backdropFilter?: string
-    fontStyle?: "normal" | "italic" | "oblique"
-    transform?: string
-  }
-  animation?: {
-    type: "none" | "fade" | "slide" | "typewriter" | "bounce"
-    duration: number
-    delay: number
-  }
-  textStroke?: {
-    width: string
-    color: string
-  }
-  letterSpacing?: string
-  textTransform?: "none" | "uppercase" | "lowercase" | "capitalize"
-  fontStyle?: "normal" | "italic"
-  textDecoration?: "none" | "underline" | "line-through"
-  backgroundStyle?: {
-    type: "none" | "solid" | "gradient"
-    borderRadius?: string
-    opacity?: number
-  }
-  fontWeight?: number | string
-  backgroundColor?: string
-  background?: string
-  backdropFilter?: string
-  borderRadius?: string
-  border?: string
-  transform?: string
-  backgroundClip?: string
-  WebkitBackgroundClip?: string
-  WebkitTextFillColor?: string
-}
-
 
 export interface CaptionOverlay extends BaseOverlay {
   type: OverlayType.CAPTION;
   captions: Caption[];
-  styles?: CaptionStyles;
+  styles: BaseStyles & {
+    fontFamily?: string;
+    fontSize?: string;
+    lineHeight?: string | number;
+    textAlign?: "left" | "center" | "right";
+    color?: string;
+    backgroundColor?: string;
+    background?: string;
+    backdropFilter?: string;
+    padding?: string;
+    wordSpacing?: string;
+    fontWeight?: number | "normal" | "bold" | "lighter" | "bolder";
+    letterSpacing?: string;
+    textShadow?: string;
+    borderRadius?: string;
+    transition?: string;
+    animation?: AnimationConfig;
+    // highlight style for selected text
+    highlightStyle?: Partial<{
+      backgroundColor: string;
+      color: string;
+      scale: number;
+      fontWeight: number | "normal" | "bold" | "lighter" | "bolder";
+      textShadow: string;
+      padding: string;
+      borderRadius: string;
+      transition: string;
+      background: string;
+      border: string;
+      backdropFilter: string;
+    }>;
+
+
+  };
   template?: string;
 }
 

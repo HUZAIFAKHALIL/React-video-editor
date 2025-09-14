@@ -51,7 +51,7 @@ interface TextStylePanelProps {
  */
 export const TextStylePanel: React.FC<TextStylePanelProps> = ({
   localOverlay,
-  handleStyleChange,
+  handleStyleChange
 }) => {
   return (
     <div className="space-y-6">

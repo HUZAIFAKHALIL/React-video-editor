@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Overlay, OverlayType, CaptionStyles, CaptionOverlay } from "../types";
+import { Overlay, OverlayType, CaptionOverlay } from "../types";
 import { defaultCaptionStyles } from "../components/overlays/captions/caption-settings";
 
 /**
@@ -202,7 +202,7 @@ export const useOverlays = (initialOverlays?: Overlay[]) => {
   }, []);
 
   const updateOverlayStyles = useCallback(
-    (overlayId: number, styles: Partial<CaptionStyles>) => {
+    (overlayId: number, styles: Partial<CaptionOverlay["styles"]>) => {
       changeOverlay(overlayId, (overlay) => {
         if (overlay.type !== OverlayType.CAPTION) return overlay;
         return {
