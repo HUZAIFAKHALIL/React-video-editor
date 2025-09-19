@@ -12,7 +12,7 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
   overlay,
 }) => {
   const frame = useCurrentFrame();
-  const frameMs = (frame / 30) * 1000; // Convert frame to milliseconds
+  const frameMs = (frame / 30) * 1000;
   const styles = overlay.styles || defaultCaptionStyles;
 
   const currentCaption = overlay.captions.find(
@@ -27,18 +27,7 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
     right: "flex-end",
   };
 
-
   const isExitPhase = frame >= overlay.durationInFrames - 30;
-
-
-  const enterAnimation =
-    !isExitPhase && styles.animation?.enter
-      ? animationTemplates[styles.animation.enter]?.enter(frame, overlay.durationInFrames)
-      : {};
-  const exitAnimation =
-    isExitPhase && styles.animation?.exit
-      ? animationTemplates[styles.animation.exit]?.exit(frame, overlay.durationInFrames)
-      : {};
 
   const renderWords = (caption: Caption) => {
     return caption.words.map((word, index) => {
@@ -49,6 +38,28 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
 
       const highlightStyle =
         styles.highlightStyle || defaultCaptionStyles.highlightStyle;
+
+      // compute word-relative frames
+      const wordStartFrame = Math.floor((word.startMs / 1000) * 30);
+      const wordEndFrame = Math.floor((word.endMs / 1000) * 30);
+      const wordFrame = frame - wordStartFrame;
+      const wordDuration = Math.max(wordEndFrame - wordStartFrame, 1);
+
+      // animations per word, relative to word timing
+      const enterAnimation =
+        !isExitPhase && styles.animation?.enter
+          ? animationTemplates[styles.animation.enter]?.enter(
+              wordFrame,
+              wordDuration
+            )
+          : {};
+      const exitAnimation =
+        isExitPhase && styles.animation?.exit
+          ? animationTemplates[styles.animation.exit]?.exit(
+              wordFrame,
+              wordDuration
+            )
+          : {};
 
       return (
         <span
@@ -105,7 +116,6 @@ export const CaptionLayerContent: React.FC<CaptionLayerContentProps> = ({
         letterSpacing: styles.letterSpacing || "0em",
         wordSpacing: styles.wordSpacing || "0em",
         textShadow: styles.textShadow,
-        ...(isExitPhase ? exitAnimation : enterAnimation), // Apply animations to container
       }}
     >
       <div
